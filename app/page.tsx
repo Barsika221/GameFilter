@@ -41,21 +41,16 @@ export default function GamesPage() {
     ) => {
       let filtered = [...games];
 
-      // Filter by search query
       if (searchQuery.trim()) {
         filtered = filtered.filter((game) =>
           game.title.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
-
-      // Filter by genres
       if (selectedGenres.length > 0) {
         filtered = filtered.filter((game) =>
           selectedGenres.includes(game.genre)
         );
       }
-
-      // Filter by platforms
       if (selectedPlatforms.length > 0) {
         filtered = filtered.filter((game) =>
           game.platforms.some((platform) =>
@@ -63,21 +58,17 @@ export default function GamesPage() {
           )
         );
       }
-
-      // Filter by year
       filtered = filtered.filter(
         (game) =>
           game.releaseYear >= yearRange[0] && game.releaseYear <= yearRange[1]
       );
-
-      // Filter by rating
       filtered = filtered.filter(
         (game) => game.rating >= ratingRange[0] && game.rating <= ratingRange[1]
       );
 
       setFilteredGames(filtered);
     },
-    [searchQuery] // Only recreate when searchQuery changes
+    [searchQuery]
   );
 
   return (
