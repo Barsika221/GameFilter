@@ -7,6 +7,8 @@ import { Filter, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import GameCard from "@/components/game-card";
+import FilterSidebar from "@/components/filter-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { type Game, games } from "@/lib/data";
 
