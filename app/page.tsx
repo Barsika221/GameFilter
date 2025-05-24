@@ -18,10 +18,17 @@ export default async function GamesPage() {
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Game Library</h1>
+            <div className="flex items-center gap-2"></div>
           </div>
-          <ThemeToggle />
+
           <div className="relative mt-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search games..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="pl-10"
+            />
           </div>
         </div>
       </header>
