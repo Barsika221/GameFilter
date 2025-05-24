@@ -89,27 +89,10 @@ export default function GamesPage() {
                 Filters
               </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="md:hidden"
-              >
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
-              </Button>
-            </div>
           </div>
 
           <div className="relative mt-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search games..."
-              value={searchQuery}
-              onChange={handleSearch}
-              className="pl-10"
-            />
             <Input
               placeholder="Search games..."
               value={searchQuery}
@@ -122,12 +105,6 @@ export default function GamesPage() {
 
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar - Fixed on desktop, overlay on mobile */}
-        <FilterSidebar
-          applyFilters={applyFilters}
-          showOnMobile={showFilters}
-          onClose={() => setShowFilters(false)}
-        />
         {/* Sidebar - Fixed on desktop, overlay on mobile */}
         <FilterSidebar
           applyFilters={applyFilters}
