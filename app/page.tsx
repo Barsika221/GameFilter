@@ -40,16 +40,22 @@ export default function GamesPage() {
       ratingRange: [number, number]
     ) => {
       let filtered = [...games];
+
+      // Filter by search query
       if (searchQuery.trim()) {
         filtered = filtered.filter((game) =>
           game.title.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
+
+      // Filter by genres
       if (selectedGenres.length > 0) {
         filtered = filtered.filter((game) =>
           selectedGenres.includes(game.genre)
         );
       }
+
+      // Filter by platforms
       if (selectedPlatforms.length > 0) {
         filtered = filtered.filter((game) =>
           game.platforms.some((platform) =>
@@ -57,17 +63,21 @@ export default function GamesPage() {
           )
         );
       }
+
+      // Filter by year
       filtered = filtered.filter(
         (game) =>
           game.releaseYear >= yearRange[0] && game.releaseYear <= yearRange[1]
       );
+
+      // Filter by rating
       filtered = filtered.filter(
         (game) => game.rating >= ratingRange[0] && game.rating <= ratingRange[1]
       );
 
       setFilteredGames(filtered);
     },
-    [searchQuery]
+    [searchQuery] // Only recreate when searchQuery changes
   );
 
   return (
@@ -77,18 +87,39 @@ export default function GamesPage() {
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Game Library</h1>
-            <div className="flex items-center gap-2"></div>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className="md:hidden"
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+              </Button>
+            </div>
           </div>
-          <ThemeToggle />
+
           <div className="relative mt-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search games..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="pl-10"
+            />
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar*/}
+        {/* Sidebar - Fixed on desktop, overlay on mobile */}
+        <FilterSidebar
+          applyFilters={applyFilters}
+          showOnMobile={showFilters}
+          onClose={() => setShowFilters(false)}
+        />
 
         {/* Game Cards - Scrollable */}
         <main className="flex-1 overflow-y-auto p-4">
