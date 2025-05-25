@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb"
+import { MongoClient, ServerApiVersion } from "mongodb"
 
 export interface Game {
   id: number
@@ -11,23 +11,40 @@ export interface Game {
   description: string
 }
 
-// MongoDB connection URI and DB name
-const uri = "mongodb://127.0.0.1:27017"
-const dbName = "GameFilter"
+// MongoDB Atlas connection URI and DB name from environment variables
+const username = process.env.MONGODB_USERNAME || ""
+const password = process.env.MONGODB_PASSWORD || ""
+const cluster = process.env.MONGODB_CLUSTER || "gamefilter.46pel4n.mongodb.net"
+const appName = process.env.MONGODB_APP_NAME || "GameFilter"
+
+const uri = `mongodb+srv://${username}:${password}@${cluster}/?retryWrites=true&w=majority&appName=${appName}`
+const dbName = process.env.MONGODB_DB_NAME || "GameFilter"
 
 let client: MongoClient | null = null
 
 async function getDb() {
   try {
     if (!client) {
-      console.log("Connecting to MongoDB...")
-      client = new MongoClient(uri)
+      if (!username || !password) {
+        throw new Error("MongoDB credentials not found in environment variables")
+      }
+      
+      console.log("Connecting to MongoDB Atlas...")
+      client = new MongoClient(uri, {
+        serverApi: {
+          version: ServerApiVersion.v1,
+          strict: false,
+          deprecationErrors: true,
+        }
+      })
       await client.connect()
-      console.log("Connected to MongoDB successfully")
+      // Test the connection
+      await client.db("admin").command({ ping: 1 })
+      console.log("Connected to MongoDB Atlas successfully")
     }
     return client.db(dbName)
   } catch (error) {
-    console.error("MongoDB connection error:", error)
+    console.error("MongoDB Atlas connection error:", error)
     client = null
     throw error
   }
