@@ -1,10 +1,21 @@
-import { GET_genres } from "@/lib/data";
+import { getGenres } from "@/lib/data";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const result = await GET_genres();
-  if ('error' in result) {
-    return NextResponse.json(result, { status: 500 });
+  console.log("API: /api/genres called");
+  
+  try {
+    const genres = await getGenres();
+    console.log("API: Successfully fetched genres:", genres);
+    return NextResponse.json(genres);
+  } catch (error) {
+    console.error("API: Error fetching genres:", error);
+    return NextResponse.json(
+      { 
+        error: "Failed to fetch genres", 
+        details: error instanceof Error ? error.message : "Unknown error" 
+      }, 
+      { status: 500 }
+    );
   }
-  return NextResponse.json(result.genres);
 }
