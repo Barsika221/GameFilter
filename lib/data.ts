@@ -27,20 +27,49 @@ async function getDb() {
 
 export async function getGames(): Promise<Game[]> {
   const db = await getDb()
-  // Assumes your collection is named "games"
-  return db.collection<Game>("games").find().toArray()
+  const gamesFromDb = await db.collection<Game>("games").find().toArray()
+  
+  // Convert MongoDB documents to plain serializable objects
+  return gamesFromDb.map(game => ({
+    id: game.id,
+    title: game.title,
+    genre: game.genre,
+    platforms: game.platforms,
+    releaseYear: game.releaseYear,
+    rating: game.rating,
+    image: game.image,
+    description: game.description
+    // Explicitly omit _id field
+  }))
 }
 
 export async function getGenres(): Promise<string[]> {
   const db = await getDb()
-  // Assumes your collection is named "genres" and each doc has a "name" field
   const genres = await db.collection<{ name: string }>("genres").find().toArray()
   return genres.map(g => g.name)
 }
 
 export async function getPlatforms(): Promise<string[]> {
   const db = await getDb()
-  // Assumes your collection is named "platforms" and each doc has a "name" field
   const platforms = await db.collection<{ name: string }>("platforms").find().toArray()
   return platforms.map(p => p.name)
+}
+
+// API Route Handlers
+export async function GET_genres() {
+  try {
+    const genres = await getGenres()
+    return { genres }
+  } catch (error) {
+    return { error: "Failed to fetch genres" }
+  }
+}
+
+export async function GET_platforms() {
+  try {
+    const platforms = await getPlatforms()
+    return { platforms }
+  } catch (error) {
+    return { error: "Failed to fetch platforms" }
+  }
 }
